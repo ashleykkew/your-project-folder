@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>User Events</title>
+<style>
+  body { font-family: Arial, Helvetica, sans-serif; background-color: #f4f0eb; }
+  .container { padding: 20px; max-width: 900px; margin: 20px auto; background-color: #fff; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); }
+  h2 { font-family: 'Dancing Script', cursive; text-align: center; font-size: 36px; color: #8d6e63; }
+  .event-list { list-style-type: none; padding: 0; }
+  .event-list li { padding: 10px 20px; background-color: #fff; border-bottom: 1px solid #ccc; cursor: pointer; }
+  .event-list li:hover { background-color: #f1f1f1; }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h2>Your Events</h2>
+  <ul class="event-list" id="event-list"></ul>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const eventList = document.getElementById('event-list');
+    let userEvents = JSON.parse(localStorage.getItem('userEvents')) || [];
+    if (userEvents.length === 0) {
+      eventList.innerHTML = '<li>No events created yet.</li>';
+    } else {
+      userEvents.forEach((event, index) => {
+        let listItem = document.createElement('li');
+        listItem.textContent = `${event.eventName} - ${event.eventDate}`;
+        listItem.dataset.index = index;
+        eventList.appendChild(listItem);
+      });
+    }
+
+    eventList.addEventListener('click', function(e) {
+      if (e.target.tagName === 'LI') {
+        let index = e.target.dataset.index;
+        localStorage.setItem('selectedEventIndex', index);
+        window.location.href = 'RSVP_responses.html';
+      }
+    });
+    document.addEventListener('DOMContentLoaded', function() {
+  const params = new URLSearchParams(window.location.search);
+  const eventID = params.get('id');
+
+  if (eventID) {
+    const userEvents = JSON.parse(localStorage.getItem('userEvents')) || [];
+    const event = userEvents.find(e => e.id == eventID);
+
+    if (event) {
+      // Populate form fields or display event details as needed
+      // Example: Populate RSVP form with event details
+      // document.getElementById('event-name').textContent = event.eventName;
+    } else {
+      alert('Event not found.');
+    }
+  } else {
+    alert('No event ID provided.');
+  }
+});
+  });
+</script>
+
+</body>
+</html>

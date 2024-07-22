@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Create Event</title>
+<style>
+* { box-sizing: border-box; }
+body { font-family: Arial, Helvetica, sans-serif; background-color: #f4f0eb; }
+.header { overflow: hidden; background-color: #d2b48c; padding: 20px 10px; }
+.header a { float: left; color: black; text-align: center; padding: 12px; text-decoration: none; font-size: 18px; line-height: 25px; border-radius: 4px; }
+.header a.logo { font-size: 25px; font-weight: bold; }
+.header a:hover { background-color: #a1887f; color: black; }
+.header a.active { background-color: #8d6e63; color: white; }
+.header-right { float: right; }
+.menu-toggle { display: none; float: right; font-size: 30px; cursor: pointer; }
+@media screen and (max-width: 500px) {
+  .header a { float: none; display: block; text-align: left; }
+  .header-right { float: none; }
+  .menu-toggle { display: block; }
+  .header-right a { display: none; }
+}
+.container { padding: 20px; max-width: 900px; margin: 20px auto; background-color: #fff; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); }
+h2 { font-family: 'Dancing Script', cursive; text-align: center; font-size: 36px; color: #8d6e63; }
+h3 { font-family: 'Georgia', 'Times New Roman', serif; color: #8d6e63; margin-top: 40px; margin-bottom: 10px; }
+.form-group { margin-bottom: 15px; }
+.form-group label { display: block; margin-bottom: 5px; font-weight: normal; font-family: 'Helvetica', sans-serif; font-size: 16px; }
+.form-group input, .form-group textarea, .form-group select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-family: 'Georgia', 'Times New Roman', serif; }
+.form-group textarea { resize: vertical; }
+.form-group-inline { display: flex; gap: 20px; }
+.form-group-inline .form-group { flex: 1; }
+.checkbox-group { display: flex; align-items: center; gap: 10px; }
+.checkbox-group input[type="checkbox"] { width: auto; }
+.button-group { text-align: right; }
+.button-group button { background-color: #8d6e63; color: white; padding: 10px 20px; border: none; cursor: pointer; border-radius: 4px; margin-left: 10px; font-family: 'Georgia', 'Times New Roman', serif; }
+.button-group button:hover { opacity: 0.8; }
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.4);
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  position: relative;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  width: 80%;
+  max-width: 500px;
+  text-align: center;
+}
+
+.close-modal {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 24px;
+  cursor: pointer;
+  color: #aaa;
+}
+
+.close-modal:hover,
+.close-modal:focus {
+  color: black;
+}
+
+.form-group-inline .form-group label {
+  display: inline-block;
+  margin-right: 10px;
+}
+.form-group-inline .form-group select {
+  width: auto;
+  display: inline-block;
+}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+</head>
+<body>
+
+<div class="header">
+  <a href="index.html" class="logo">CompanyLogo</a>
+  <span class="menu-toggle">&#9776;</span>
+  <div class="header-right">
+    <a href="index.html">Home</a>
+    <a class="active" href="contact.html">Create Event</a>
+    <a href="profile.html">Profile</a>
+  </div>
+</div>
+
+<div class="container">
+  <h2>Create Event</h2>
+  <form id="create-event-form">
+    <div class="form-group-inline">
+      <div class="form-group">
+        <label for="event-name">Event Name</label>
+        <input type="text" id="event-name" name="event-name" placeholder="Enter event name" required>
+      </div>
+      <div class="form-group">
+        <label for="event-date">Event Date</label>
+        <input type="date" id="event-date" name="event-date" required>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="event-description">Event Description</label>
+      <textarea id="event-description" name="event-description" rows="4" placeholder="Enter event description"></textarea>
+    </div>
+    <div class="form-group-inline">
+      <div class="form-group">
+        <label for="event-start-time">Start Time</label>
+        <input type="time" id="event-start-time" name="event-start-time" required>
+      </div>
+      <div class="form-group">
+        <label for="event-end-time">End Time</label>
+        <input type="time" id="event-end-time" name="event-end-time" required>
+      </div>
+    </div>
+    <div class="form-group-inline">
+      <div class="form-group">
+        <label for="event-location">Event Location</label>
+        <input type="text" id="event-location" name="event-location" placeholder="Enter event location" required>
+      </div>
+      <div class="form-group">
+        <label for="event-location-line2">Location Line 2</label>
+        <input type="text" id="event-location-line2" name="event-location-line2" placeholder="Enter additional location details">
+      </div>
+    </div>
+    <div class="form-group-inline">
+      <div class="form-group checkbox-group">
+        <input type="checkbox" id="event-is-free" name="event-is-free">
+        <label for="event-is-free">This event is free</label>
+      </div>
+      <div class="form-group" id="ticket-cost-group">
+        <label for="event-cost">Event Ticket Cost</label>
+        <input type="number" id="event-cost" name="event-cost" placeholder="Enter ticket cost" step="0.01">
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="event-guest-requirements">Guest Requirements</label>
+      <textarea id="event-guest-requirements" name="event-guest-requirements" rows="4" placeholder="What do guests need to bring?"></textarea>
+    </div>
+    <div class="form-group checkbox-group">
+      <input type="checkbox" id="event-has-dresscode" name="event-has-dresscode">
+      <label for="event-has-dresscode">This event has a dress code</label>
+    </div>
+    <div class="form-group" id="dresscode-details-group" style="display: none;">
+      <label for="dresscode-details">Dress Code Details</label>
+      <textarea id="dresscode-details" name="dresscode-details" rows="4" placeholder="Enter dress code details"></textarea>
+    </div>
+    <h3>Host Details (required)</h3>
+    <div class="form-group-inline">
+      <div class="form-group">
+        <label for="host-name">Host Name</label>
+        <input type="text" id="host-name" name="host-name" placeholder="Enter your name" required>
+      </div>
+      <div class="form-group">
+        <label for="host-email">Host Email</label>
+        <input type="email" id="host-email" name="host-email" placeholder="Enter your email" required>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="host-phone">Host Phone Number</label>
+      <input type="tel" id="host-phone" name="host-phone" placeholder="Enter your phone number" required>
+    </div>
+    <div class="form-group-inline">
+      <div class="form-group">
+        <label for="background-color">Background Color</label>
+        <select id="background-color" name="background-color">
+          <option value="#ffffff">White</option>
+          <option value="#f4f0eb">Beige</option>
+          <option value="#d2b48c">Tan</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="font">Font</label>
+        <select id="font" name="font">
+          <option value="Helvetica">Helvetica</option>
+          <option value="Times New Roman">Times New Roman</option>
+          <option value="Arial">Arial</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="border">Border</label>
+        <select id="border" name="border">
+          <option value="none">None</option>
+          <option value="solid">Solid</option>
+          <option value="dotted">Dotted</option>
+          <option value="dashed">Dashed</option>
+        </select>
+      </div>
+    </div>
+    <div class="button-group">
+      <button type="button" id="create-pdf-btn">Save as PDF</button>
+      <button type="submit">Create Event</button>
+    </div>
+  </form>
+</div>
+
+<div id="confirmation-modal" class="modal">
+  <div class="modal-content">
+    <span class="close-modal">&times;</span>
+    <p id="confirmation-message"></p>
+  </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const menuToggle = document.querySelector(".menu-toggle");
+  const headerRight = document.querySelector(".header-right");
+
+  menuToggle.addEventListener("click", function () {
+    const links = headerRight.querySelectorAll("a");
+    links.forEach(link => link.style.display = link.style.display === "block" ? "none" : "block");
+  });
+
+  document.getElementById('event-is-free').addEventListener('change', function () {
+    document.getElementById('ticket-cost-group').style.display = this.checked ? 'none' : 'block';
+  });
+
+  document.getElementById('event-has-dresscode').addEventListener('change', function () {
+    document.getElementById('dresscode-details-group').style.display = this.checked ? 'block' : 'none';
+  });
+
+  document.getElementById('create-pdf-btn').addEventListener('click', createPDF);
+
+  function createPDF() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    const eventName = document.getElementById('event-name').value;
+    const eventDate = document.getElementById('event-date').value;
+    const eventDescription = document.getElementById('event-description').value;
+    const eventStartTime = document.getElementById('event-start-time').value;
+    const eventEndTime = document.getElementById('event-end-time').value;
+    const eventLocation = document.getElementById('event-location').value;
+    const eventLocationLine2 = document.getElementById('event-location-line2').value;
+    const eventIsFree = document.getElementById('event-is-free').checked;
+    const eventCost = eventIsFree ? "Free" : document.getElementById('event-cost').value;
+    const eventGuestRequirements = document.getElementById('event-guest-requirements').value;
+    const eventHasDresscode = document.getElementById('event-has-dresscode').checked;
+    const dresscodeDetails = eventHasDresscode ? document.getElementById('dresscode-details').value : "No dress code";
+    const hostName = document.getElementById('host-name').value;
+    const hostEmail = document.getElementById('host-email').value;
+    const hostPhone = document.getElementById('host-phone').value;
+    const backgroundColor = document.getElementById('background-color').value;
+    const font = document.getElementById('font').value;
+    const border = document.getElementById('border').value;
+
+    // Setting the styles
+    doc.setFillColor(backgroundColor);
+    doc.rect(0, 0, 210, 297, 'F');
+    doc.setFont(font);
+
+    // Adding text
+    doc.text(`Event Name: ${eventName}`, 20, 20);
+    doc.text(`Date: ${eventDate}`, 20, 30);
+    doc.text(`Time: ${eventStartTime} - ${eventEndTime}`, 20, 40);
+    doc.text(`Location: ${eventLocation} ${eventLocationLine2}`, 20, 50);
+    doc.text(`Description: ${eventDescription}`, 20, 60);
+    doc.text(`Cost: ${eventCost}`, 20, 70);
+    doc.text(`Guest Requirements: ${eventGuestRequirements}`, 20, 80);
+    doc.text(`Dress Code: ${dresscodeDetails}`, 20, 90);
+    doc.text(`Host: ${hostName}`, 20, 100);
+    doc.text(`Email: ${hostEmail}`, 20, 110);
+    doc.text(`Phone: ${hostPhone}`, 20, 120);
+
+    // QR code generation for RSVP page link
+    const rsvpLink = `http://example.com/rsvp?event=${encodeURIComponent(eventName)}&host=${encodeURIComponent(hostEmail)}`;
+    QRCode.toDataURL(rsvpLink, { errorCorrectionLevel: 'H' })
+      .then(url => {
+        doc.addImage(url, 'PNG', 20, 130, 50, 50);
+        doc.text("Scan to RSVP", 20, 190);
+
+        // Apply border if selected
+        if (border !== "none") {
+          doc.setLineWidth(0.5);
+          const borderStyle = border === "dotted" ? [1, 1] : border === "dashed" ? [3, 3] : [];
+          doc.setLineDash(borderStyle);
+          doc.rect(10, 10, 190, 277);
+        }
+
+        // Save the PDF
+        doc.save(`${eventName}-Invitation.pdf`);
+      })
+      .catch(err => {
+        console.error(err);
+        alert("Failed to generate QR code.");
+      });
+  }
+
+  document.getElementById('create-event-form').addEventListener('submit', function (event) {
+    event.preventDefault();
+
+    const formData = new FormData(event.target);
+    const formProps = Object.fromEntries(formData);
+
+    localStorage.setItem('event', JSON.stringify(formProps));
+
+    const confirmationMessage = document.getElementById('confirmation-message');
+    confirmationMessage.textContent = 'Event created successfully!';
+    const confirmationModal = document.getElementById('confirmation-modal');
+    confirmationModal.style.display = 'flex';
+
+    confirmationModal.querySelector('.close-modal').addEventListener('click', () => {
+      confirmationModal.style.display = 'none';
+    });
+  });
+});
+</script>
+</body>
+</html>

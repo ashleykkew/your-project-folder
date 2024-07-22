@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RSVP Responses</title>
+<style>
+
+  body { font-family: Arial, Helvetica, sans-serif; background-color: #f4f0eb; }
+  .container { padding: 20px; max-width: 900px; margin: 20px auto; background-color: #fff; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); }
+  h2 { font-family: 'Dancing Script', cursive; text-align: center; font-size: 36px; color: #8d6e63; }
+  .event-details { margin-bottom: 20px; }
+  .event-details p { margin: 5px 0; }
+  .rsvp-responses { list-style-type: none; padding: 0; }
+  .rsvp-responses li { padding: 10px 20px; background-color: #fff; border-bottom: 1px solid #ccc; }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h2>RSVP Responses</h2>
+  <div class="event-details" id="event-details"></div>
+  <ul class="rsvp-responses" id="rsvp-responses"></ul>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const eventDetails = document.getElementById('event-details');
+    const rsvpResponses = document.getElementById('rsvp-responses');
+    const selectedEventIndex = localStorage.getItem('selectedEventIndex');
+    const userEvents = JSON.parse(localStorage.getItem('userEvents')) || [];
+    
+    if (selectedEventIndex !== null) {
+      const event = userEvents[selectedEventIndex];
+      eventDetails.innerHTML = `
+        <p><strong>Event Name:</strong> ${event.eventName}</p>
+        <p><strong>Event Date:</strong> ${event.eventDate}</p>
+        <p><strong>Description:</strong> ${event.eventDescription}</p>
+        <p><strong>Start Time:</strong> ${event.eventStartTime}</p>
+        <p><strong>End Time:</strong> ${event.eventEndTime}</p>
+        <p><strong>Location:</strong> ${event.eventLocation}</p>
+        <p><strong>Additional Location Details:</strong> ${event.eventLocationLine2}</p>
+        <p><strong>Event is Free:</strong> ${event.eventIsFree}</p>
+        <p><strong>Ticket Cost:</strong> ${event.eventCost}</p>
+        <p><strong>Guest Requirements:</strong> ${event.eventGuestRequirements}</p>
+        <p><strong>Dress Code:</strong> ${event.eventHasDresscode}</p>
+        <p><strong>Dress Code Details:</strong> ${event.dresscodeDetails}</p>
+        <p><strong>Host Name:</strong> ${event.hostName}</p>
+        <p><strong>Host Email:</strong> ${event.hostEmail}</p>
+        <p><strong>Host Phone:</strong> ${event.hostPhone}</p>
+      `;
+      
+      const rsvps = JSON.parse(localStorage.getItem(`rsvps_${event.id}`)) || [];
+      if (rsvps.length > 0) {
+        rsvps.forEach(response => {
+          const listItem = document.createElement('li');
+          listItem.innerHTML = `
+            <p><strong>Name:</strong> ${response.firstName} ${response.lastName}</p>
+            <p><strong>Email:</strong> ${response.email}</p>
+            <p><strong>Phone:</strong> ${response.phone}</p>
+            <p><strong>Dietary Needs:</strong> ${response.dietaryNeeds}</p>
+            <p><strong>Medical Needs:</strong> ${response.medicalNeeds}</p>
+          `;
+          rsvpResponses.appendChild(listItem);
+        });
+      } else {
+        rsvpResponses.innerHTML = '<li>No RSVP responses yet.</li>';
+      }
+    } else {
+      eventDetails.innerHTML = '<p>No event selected.</p>';
+    }
+  });
+</script>
+
+</body>
+</html>

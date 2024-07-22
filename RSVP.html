@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RSVP</title>
+
+<style>
+  /* Global Styles */
+  body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #f4f0eb; 
+    margin: 0;
+    padding: 0;
+  }
+  .container {
+    max-width: 600px;
+    margin: 20px auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  .header {
+    overflow: hidden;
+    background-color: #d2b48c; 
+    padding: 20px 10px;
+  }
+  .header a {
+    float: left;
+    color: black;
+    text-align: center;
+    padding: 12px;
+    text-decoration: none;
+    font-size: 18px; 
+    line-height: 25px;
+    border-radius: 4px;
+  }
+  .header a.logo {
+    font-size: 25px;
+    font-weight: bold;
+  }
+  .header a:hover {
+    background-color: #a1887f; /* Darker brown on hover */
+    color: black;
+  }
+  .header a.active {
+    background-color: #8d6e63; /* Darker brown for active link */
+    color: white;
+  }
+  .header-right {
+    float: right;
+  }
+  .menu-toggle {
+    display: none;
+    float: right;
+    font-size: 30px;
+    cursor: pointer;
+  }
+  @media screen and (max-width: 500px) {
+    .header a {
+      float: none;
+      display: block;
+      text-align: left;
+    }
+    .header-right {
+      float: none;
+    }
+    .menu-toggle {
+      display: block;
+    }
+    .header-right a {
+      display: none;
+    }
+  }
+  form {
+    display: flex;
+    flex-direction: column;
+  }
+  label {
+    margin-bottom: 5px;
+  }
+  input, textarea {
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+  button {
+    padding: 10px;
+    background-color: #8d6e63; /* Dark brown */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  button:hover {
+    background-color: #a1887f; /* Lighter brown */
+  }
+  </style>
+  
+</head>
+<body>
+
+<div class="header">
+  <a href="index.html" class="logo">CompanyLogo</a>
+  <span class="menu-toggle">&#9776;</span>
+  <div class="header-right">
+    <a href="index.html">Home</a>
+    <a href="create_event.html">Create Event</a>
+    <a href="profile.html">Profile</a>
+    <a class="active" href="RSVP.html">RSVP</a>
+  </div>
+</div>
+
+<div class="container">
+  <h2>RSVP</h2>
+  <form id="rsvp-form">
+    <label for="firstName">First Name</label>
+    <input type="text" id="firstName" name="firstName" required>
+
+    <label for="lastName">Last Name</label>
+    <input type="text" id="lastName" name="lastName" required>
+
+    <label for="email">Email</label>
+    <input type="email" id="email" name="email" required>
+
+    <label for="phone">Phone</label>
+    <input type="tel" id="phone" name="phone" required>
+
+    <label for="dietaryNeeds">Dietary Needs</label>
+    <textarea id="dietaryNeeds" name="dietaryNeeds"></textarea>
+
+    <label for="medicalNeeds">Medical Needs</label>
+    <textarea id="medicalNeeds" name="medicalNeeds"></textarea>
+
+    <button type="submit">Submit</button>
+  </form>
+</div>
+
+<script>
+document.querySelector('.menu-toggle').addEventListener('click', function() {
+  var x = document.querySelector('.header-right');
+  x.style.display = x.style.display === 'block' ? 'none' : 'block';
+});
+
+document.getElementById('rsvp-form').addEventListener('submit', function(event) {
+  event.preventDefault();
+
+  const selectedEvent = JSON.parse(localStorage.getItem('selectedEvent'));
+  const formData = new FormData(event.target);
+  const rsvp = {
+    firstName: formData.get('firstName'),
+    lastName: formData.get('lastName'),
+    email: formData.get('email'),
+    phone: formData.get('phone'),
+    dietaryNeeds: formData.get('dietaryNeeds'),
+    medicalNeeds: formData.get('medicalNeeds')
+  };
+
+  if (selectedEvent) {
+    const rsvps = JSON.parse(localStorage.getItem(`rsvps_${selectedEvent.id}`)) || [];
+    rsvps.push(rsvp);
+    localStorage.setItem(`rsvps_${selectedEvent.id}`, JSON.stringify(rsvps));
+
+    alert('RSVP submitted successfully!');
+    window.location.href = 'index.html';
+  } else {
+    alert('No event selected.');
+  }
+});
+</script>
+
+</body>
+</html>
